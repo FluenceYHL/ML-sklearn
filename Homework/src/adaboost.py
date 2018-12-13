@@ -61,24 +61,28 @@ class adaBoost():
             else:
                 self.weights = D_2
                 self.classfiers.append([alpha_2, 1, index_2])
-            print(self.classfiers)
-            print('\n\n')
-
-            for i in range(length):
-                judge = 0.0
-                for it in self.classfiers:
-                    res = 0
-                    if(it[1] == 0):
-                        res = 1 if(i <= it[2]) else -1
-                    else:
-                        res = -1 if(i <= it[2]) else 1
-                    judge += it[0] * res
-                judge = 1 if(judge > 0) else -1
-                print(judge)
-
-            if(cnt == 2):
+            error = self.score(x, y)
+            if(error > 1 - errorRate):
                 break
-            cnt = cnt + 1
+
+    def score(self, x, y):
+        length = len(x)
+        error = 0
+        for i in range(length):
+            judge = 0.0
+            for it in self.classfiers:
+                res = 0
+                if(it[1] == 0):
+                    res = 1 if(i <= it[2]) else -1
+                else:
+                    res = -1 if(i <= it[2]) else 1
+                judge += it[0] * res
+            judge = 1 if(judge > 0) else -1
+            print(judge)
+            error += int(judge == y[i])
+        error /= length
+        print(error)
+        return error
 
 
 if __name__ == '__main__':
@@ -87,4 +91,3 @@ if __name__ == '__main__':
 
     one = adaBoost()
     one.fit(x, y)
-
